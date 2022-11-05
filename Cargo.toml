@@ -11,3 +11,4 @@ clap = { version = "4.0.19", features = ["derive"] }
 fs_extra = "1.2.0"
 log = "0.4.17"
 env_logger = "0.9.1"
+itertools = "0.10.5"
