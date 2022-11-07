@@ -2,13 +2,27 @@ use std::{env, path::Path};
 
 use itertools::Itertools;
 
-pub fn get_app_names(app_names: &[String]) -> Vec<&str> {
-    let mut retval: Vec<&str> = vec![];
+#[derive(Clone)]
+pub struct AppNamesStruct<'a> {
+    pub core_app_names: Vec<&'a str>,
+    pub portal_app_names: Vec<&'a str>,
+}
+
+pub fn get_app_names(app_names: &[String]) -> AppNamesStruct {
+    let mut retval = AppNamesStruct {
+        core_app_names: vec![],
+        portal_app_names: vec![],
+    };
     for ii in 0..app_names.len() {
-        retval.push(app_names[ii].as_str())
+        if app_names[ii].as_str().ends_with("-portal") {
+            retval.portal_app_names.push(app_names[ii].as_str())
+        } else {
+            retval.core_app_names.push(app_names[ii].as_str())
+        }
     }
 
-    retval = retval.into_iter().unique().collect();
+    retval.core_app_names = retval.core_app_names.into_iter().unique().collect();
+    retval.portal_app_names = retval.portal_app_names.into_iter().unique().collect();
 
     return retval;
 }
