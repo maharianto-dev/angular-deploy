@@ -11,11 +11,11 @@ mod helper;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Path of angular frontend dir
+    /// Full path of angular frontend dir
     #[arg(short = 'f', long)]
     fepath: String,
 
-    /// [Optional] The path where the built app folder will be deployed to (e.g: nginx/html) and automatically move the built app to the specified directory
+    /// [Optional] The full path where the built app folder will be deployed to (e.g: nginx/html) and automatically move the built app to the specified directory
     #[arg(short = 'd', long)]
     deploypath: Option<String>,
 
@@ -63,7 +63,7 @@ fn main() {
             command_to_run.push_str(&format!(
                 "nx run-many --target=build --projects={} --parallel={}",
                 app_names.join(","),
-                app_names.len() - 1
+                app_names.len()
             ));
         } else {
             command_to_run.push_str(&format!("nx b {}", app_names[0]));

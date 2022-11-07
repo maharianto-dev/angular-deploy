@@ -49,6 +49,7 @@ fn execute_move_dir(my_fe_dist_app_path: &PathBuf, server_dir: &str) {
 pub fn move_app_dir_to_server_dir(fe_path: &str, app_dir: &str, server_dir: &str, app_name: &str) {
     let my_fe_path = Path::new(fe_path);
     let my_fe_dist_path = &my_fe_path.join(app_dir);
+    let my_fe_dist_nx_path = &my_fe_dist_path.join("apps");
     let my_fe_dist_app_path;
     let mut default_app_name = String::new().to_owned();
 
@@ -65,13 +66,13 @@ pub fn move_app_dir_to_server_dir(fe_path: &str, app_dir: &str, server_dir: &str
     }
 
     assert!(
-        env::set_current_dir(&my_fe_dist_path).is_ok(),
+        env::set_current_dir(&my_fe_dist_nx_path).is_ok(),
         "<frontendpath>/dist path not found!"
     );
 
-    info!("Angular build dir found {}", my_fe_dist_path.display());
+    info!("Angular build dir found {}", my_fe_dist_nx_path.display());
 
-    my_fe_dist_app_path = my_fe_dist_path.join(&default_app_name);
+    my_fe_dist_app_path = my_fe_dist_nx_path.join(&default_app_name);
     execute_delete_dir(server_dir, &default_app_name);
     execute_move_dir(&my_fe_dist_app_path, server_dir);
 }
