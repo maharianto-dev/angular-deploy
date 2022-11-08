@@ -50,7 +50,6 @@ fn main() {
 
     info!("App started");
 
-    let default_build_command = "npm run";
     let command_to_run = String::new().to_owned();
 
     let args = Args::parse();
@@ -74,7 +73,6 @@ fn main() {
         build_and_deploy(
             app_names.core_app_names,
             &command_to_run,
-            default_build_command,
             is_nx,
             is_skip_nx_cache,
             &args.fepath,
@@ -91,7 +89,6 @@ fn main() {
         build_and_deploy(
             app_names.portal_app_names,
             &command_to_run,
-            default_build_command,
             is_nx,
             is_skip_nx_cache,
             &args.fepath,
@@ -107,7 +104,6 @@ fn main() {
 fn build_and_deploy(
     app_names: Vec<&str>,
     command_to_run_p: &str,
-    default_build_command: &str,
     is_nx: bool,
     is_skip_nx_cache: bool,
     fe_path: &str,
