@@ -129,12 +129,16 @@ fn build_and_deploy(
         command_to_run.push_str(&format!("{} ng b {}", default_build_command, app_names[0]));
     }
 
-    if is_skip_nx_cache == true {
-        command_to_run.push_str(&format!(" --skip-nx-cache"));
-    }
+    if is_skip_nx_cache == true || kind == AppKind::Portal {
+        command_to_run.push_str(&format!(" --"));
 
-    if kind == AppKind::Portal {
-        command_to_run.push_str(&format!(" --configuration=portal"));
+        if is_skip_nx_cache == true {
+            command_to_run.push_str(&format!(" --skip-nx-cache"));
+        }
+
+        if kind == AppKind::Portal {
+            command_to_run.push_str(&format!(" --configuration=portal"));
+        }
     }
 
     info!("Running command: {}", command_to_run);
