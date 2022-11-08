@@ -41,7 +41,7 @@ enum AppKind {
 fn main() {
     println!("======================================================");
     println!("= Simple CLI program to build and deploy angular app =");
-    println!("= Version: 0.1.1                                     =");
+    println!("= Version: 0.1.2                                     =");
     println!("= Made by Aridya Maharianto, November 2022           =");
     println!("= For personal use only!                             =");
     println!("======================================================");
