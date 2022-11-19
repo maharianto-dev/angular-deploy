@@ -1,6 +1,6 @@
-use std::process::Command;
+use std::{error::Error, process::Command};
 
-pub fn run_ng_command(my_command: &str) {
+pub fn run_ng_command(my_command: &str) -> Result<(), Box<dyn Error>> {
     let mut cmd;
     if cfg!(target_os = "windows") {
         cmd = Command::new(format!("cmd"));
@@ -15,4 +15,5 @@ pub fn run_ng_command(my_command: &str) {
     child
         .wait_with_output()
         .expect("Failed waiting child process to finish!");
+    Ok(())
 }

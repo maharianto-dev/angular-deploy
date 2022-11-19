@@ -1,4 +1,4 @@
-use std::{env, path::Path};
+use std::{env, error::Error, path::Path};
 
 use itertools::Itertools;
 
@@ -27,11 +27,20 @@ pub fn get_app_names(app_names: &[String]) -> AppNamesStruct {
     return retval;
 }
 
-pub fn change_path(new_path: &str) {
+pub fn change_path(new_path: &str) -> Result<(), Box<dyn Error>> {
     let my_fe_path = Path::new(new_path);
-    assert!(env::set_current_dir(&my_fe_path).is_ok(), "Path not found!");
-    info!(
-        "Successfully changed working directory to {}",
-        my_fe_path.display()
-    );
+    match my_fe_path.is_dir() {
+        true => {
+            env::set_current_dir(&my_fe_path)?;
+            info!(
+                "Successfully changed working directory to {}",
+                my_fe_path.display()
+            );
+            Ok(())
+        }
+        false => {
+            error!("Path not found or path is not directory!");
+            return Err("Error changing path to supplied frontend path".into());
+        }
+    }
 }

@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use clap::Parser;
 use env_logger::Env;
 
@@ -41,8 +43,8 @@ enum AppKind {
 fn main() {
     println!("======================================================");
     println!("= Simple CLI program to build and deploy angular app =");
-    println!("= Version: 0.1.2                                     =");
-    println!("= Made by Aridya Maharianto, November 2022           =");
+    println!("= Version: 0.1.3                                     =");
+    println!("= Created by Aridya Maharianto, November 2022        =");
     println!("= For personal use only!                             =");
     println!("======================================================");
     println!();
@@ -78,7 +80,8 @@ fn main() {
             &args.fepath,
             args.deploypath.clone(),
             AppKind::Core,
-        );
+        )
+        .expect("Failed building and deploying core app(s)");
         info!("Done with core app(s) build and deployment");
     }
 
@@ -94,7 +97,8 @@ fn main() {
             &args.fepath,
             args.deploypath.clone(),
             AppKind::Portal,
-        );
+        )
+        .expect("Failed building and deploying portal app(s)");
         info!("Done with portal app(s) build and deployment");
     }
 
@@ -109,7 +113,7 @@ fn build_and_deploy(
     fe_path: &str,
     deploy_path: Option<String>,
     kind: AppKind,
-) {
+) -> Result<(), Box<dyn Error>> {
     let mut command_to_run = command_to_run_p.to_string();
     if app_names.len() > 1 || is_nx == true {
         if app_names.len() > 1 {
@@ -135,19 +139,27 @@ fn build_and_deploy(
 
     info!("Running command: {}", command_to_run);
 
-    helper::change_path(fe_path);
-    angular::run_ng_command(&command_to_run);
+    helper::change_path(fe_path).expect("Error changing path to supplied frontend path");
+    angular::run_ng_command(&command_to_run).expect("Error running angular command");
 
     if let Some(deploypath) = deploy_path.as_deref() {
         if app_names.len() > 1 {
             for ii in 0..app_names.len() {
-                directory::move_app_dir_to_server_dir(fe_path, "dist", deploypath, app_names[ii]);
+                directory::move_app_dir_to_server_dir(fe_path, "dist", deploypath, app_names[ii])
+                    .expect(
+                        format!("Failed moving app dir to server dir for {}", app_names[ii])
+                            .as_str(),
+                    );
             }
         } else {
-            directory::move_app_dir_to_server_dir(fe_path, "dist", deploypath, app_names[0]);
+            directory::move_app_dir_to_server_dir(fe_path, "dist", deploypath, app_names[0])
+                .expect(
+                    format!("Failed moving app dir to server dir for {}", app_names[0]).as_str(),
+                );
         }
     } else {
         info!("Automatic deployment did not run, deploypath flag not specified!");
         info!("use angular-deploy -h or angular-deploy --help for usage info!");
     }
+    Ok(())
 }
